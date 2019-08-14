@@ -1,0 +1,14 @@
+<div class="song-container" style="cursor: pointer" nz-row>
+  <div nz-col [nzLg]="8" [nzSm]="8" [nzXs]="8">
+    <img style="width: 40px; border-radius: 30px" [src]="songData.picture">
+  </div>
+  <div nz-col [nzLg]="14" [nzSm]="14" [nzXs]="14">
+    <p style="font-weight: 600; color:#000000; margin: 0px 0; font-size: 13px">{{songData.artist}}</p>
+    <p style="font-weight: 400; color: #8e8e93; margin-bottom:0px; font-size: 12px">{{songData.title}}</p>
+  </div>
+  <div nz-col [nzLg]="2" [nzSm]="2" [nzXs]="2">
+    <i style="color: #87d068; margin: 0px 5px" *ngIf="songData.artistPoint" nz-icon nzType="user" nzTheme="outline"></i>
+    <i style="color: #87d068" *ngIf="songData.titlePoint" nz-icon nzType="sound" nzTheme="outline"></i>
+  </div>
+</div>
+<nz-divider style="margin: 5px 0"></nz-divider>

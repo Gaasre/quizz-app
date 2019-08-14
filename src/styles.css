@@ -1,1 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.ant-progress-circle-trail {
+    stroke: #e1e1e1 !important;
+    stroke-width: 2px !important;
+}
+
+.ant-progress-text {
+    color: #ffffff !important;
+    font-size: 40px !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #424C5D;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(#525A6D, #636382); 
+    border-radius: 4px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(#4d5566, #5d5d7a);
+  }
+
+  *.unselectable {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+ 
+    /*
+      Introduced in IE 10.
+      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
+ }
+
+ .ant-table-thead > tr > th {
+  background: #fff !important;
+ }
+ 
+.ant-modal {
+  width: fit-content !important;
+}
+
+.ant-modal-content {
+  width: fit-content;
+}

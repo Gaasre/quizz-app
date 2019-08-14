@@ -1,0 +1,19 @@
+<div class="layout">
+  <div class="info-container">
+    <div (click)="uploadbtn.click()" class="picture">
+      <img  [src]="player?.avatar ? '/assets/avatars/' + player?.avatar : userService.tempAvatar ? userService.tempAvatar : '/assets/avatar.png'" alt="">
+      <i class="edit-button" nz-icon [nzType]="loading ? 'loading' : 'picture'" nzTheme="outline"></i>
+      <input (change)="onFileChange($event)" #uploadbtn style="display: none" type="file" accept="image/*" />
+    </div>
+    <div style="text-align: center; padding-top: 50px">
+      <p style="font-weight: bold; font-size: 14px; margin-bottom:0px">{{player?.username}}</p>
+      <p style="color: #8A86EC">Novice</p>
+      <img src="/assets/chevron.png" alt="">
+    </div>
+
+    <div style="text-align: center; margin-top: 10px">
+      <p style="font-weight: bold; font-size: 16px;margin-bottom: 0px">Total Points</p>
+      <p>{{player?.points}}</p>
+    </div>
+  </div>
+</div>

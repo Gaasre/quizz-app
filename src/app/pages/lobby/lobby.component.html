@@ -1,0 +1,186 @@
+<nz-layout>
+  <nz-header>
+    <div style="width: 100%; height: 100%; display: inline-flexbox">
+      <div class="logo">
+        <img src="/assets/logo.png" alt="" width="32px" height="32px">
+      </div>
+    </div>
+  </nz-header>
+  <nz-layout>
+    <nz-sider style="padding: 10px 0px" [nzWidth]="70" class="left-menu">
+      <div style="position: absolute; bottom: 0; border-top: 1px solid #837fde33; padding: 20px 12px;">
+        <img nzTrigger="click" nz-popover [nzTitle]="headerTemplate" [nzContent]="contentTemplate"
+          nzPlacement="rightBottom"
+          style="width: 40px; height: 40px; border-radius: 30px; margin-bottom: 10px; cursor: pointer"
+          [src]=" userService.tempAvatar ? userService.tempAvatar : userService.User?.avatar ? '/assets/avatars/' + userService.User?.avatar : '/assets/avatar.png'"
+          alt="Avatar">
+        <ng-template #headerTemplate>
+          <b style="margin-bottom: 10px">{{userService.User.username}}</b>
+        </ng-template>
+        <ng-template #contentTemplate>
+          <div style="display: grid">
+            <a (click)="isVisible = true" style="margin-bottom: 5px"><i nz-icon nzType="user" nzTheme="outline"></i>
+              Profil</a>
+            <a (click)="Disconnect()"><i style="color:crimson" nz-icon nzType="poweroff" nzTheme="outline"></i>
+              Disconnect</a></div>
+        </ng-template>
+        <a><i style="font-size: 20px;border: 1px solid #A490BD33;border-radius: 9px;padding: 8px;" nz-icon
+            nzType="setting" nzTheme="outline"></i></a>
+      </div>
+    </nz-sider>
+    <nz-content style="overflow-y: auto">
+      <div style="padding: 50px" id="newLobby" *ngIf="panelVisible" [@panelInOut]>
+        <p style="font-size: 26px; font-weight: bold">NEW ROOM</p>
+        <div style="position: relative; float: right;">
+          <button (click)="panelVisible = false" nz-button nzShape="round" nzType="primary"><i nz-icon
+              nzType="caret-left" nzTheme="outline"></i>
+            Back to Lobby</button>
+        </div>
+        <div style="margin-top: 60px">
+          <div nz-row>
+            <div nz-col nzXs="24" nzLg="10">
+              <div class="input-container">
+                <label style="margin-right: 10px">Name : </label>
+                <input [(ngModel)]="newLobby.name" style="width: 200px" type="text" nz-input />
+              </div>
+
+              <div class="input-container">
+                <label style="margin-right: 10px">Lobby's Size : </label>
+                <nz-select style="width: 60px;" [(ngModel)]="newLobby.limit">
+                  <nz-option [nzValue]="10" nzLabel="10"></nz-option>
+                  <nz-option [nzValue]="15" nzLabel="15"></nz-option>
+                  <nz-option [nzValue]="20" nzLabel="20"></nz-option>
+                  <nz-option [nzValue]="25" nzLabel="25"></nz-option>
+                  <nz-option [nzValue]="30" nzLabel="30"></nz-option>
+                  <nz-option [nzValue]="35" nzLabel="35"></nz-option>
+                  <nz-option [nzValue]="40" nzLabel="40"></nz-option>
+                </nz-select>
+              </div>
+
+              <div class="input-container">
+                <label style="margin-right: 10px">Password (Optional) : </label>
+                <input [(ngModel)]="newLobby.password" type="password" style="width: 200px" type="text" nz-input />
+              </div>
+              <button (click)="newRoom()" [disabled]="!isSelected() || !newLobby.limit || !newLobby.name"
+                style="width: 80%; margin: auto; margin-top: 20px" nz-button nzType="primary">CONFIRM</button>
+            </div>
+            <div nz-col nzXs="24" nzLg="14">
+              <div class="rooms" style="display: flex; flex-wrap: wrap; width: 100%; padding: 20px">
+                <div style="margin: 0px 15px;width: 150px" (click)="Select(item)" *ngFor="let item of Themes">
+                  <div style="width: 100%" nz-row>
+                    <div class="room-comp" [ngClass]="{selected: item.selected === true}" nz-row>
+                      <div nz-col nzSpan="10">
+                        <div class="room">
+                          <div
+                            style="border-radius: 30px; background: linear-gradient(#485669, #3F4857); height: 50px; width: 50px; overflow: hidden">
+                            <img style="width: 50px; height: 50px; opacity: .3"
+                              [src]="'/assets/' + item.name + '.jpg'" />
+                          </div>
+                        </div>
+                      </div>
+                      <div nz-col class="room-name" nzSpan="14">
+                        <h4>{{item.name}}</h4>
+                        <p>
+                          {{item.description}}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="Lobby" style="padding: 50px;" *ngIf="!panelVisible" [@panelInOut]>
+        <p style="font-size: 26px; font-weight: bold">Private Rooms</p>
+        <div style="margin-bottom: 60px">
+          <div style="position: relative; float: left">
+            <nz-input-group style="width: 200px; margin-right: 30px" [nzPrefix]="IconSearch">
+              <input (input)="onSearchChange($event.target.value)" style="width: 200px" type="text" nz-input
+                placeholder="Find a lobby" />
+            </nz-input-group>
+            <ng-template #IconSearch>
+              <i style="color: #fff" nz-icon nzType="search"></i>
+            </ng-template>
+            <label (ngModelChange)="FilterPrivate($event)" [ngModel]="private" style="color: #fff" nz-checkbox>Show
+              private lobbies
+              only</label>
+          </div>
+          <div style="position: relative; float: right;">
+            <button (click)="panelVisible = true" nz-button nzShape="round" nzType="primary"><i nz-icon
+                nzType="plus-circle" nzTheme="outline"></i>
+              New Room</button>
+          </div>
+        </div>
+        <div>
+          <table style="width:100%">
+            <thead>
+              <tr>
+                <th><i nz-icon nzType="lock" nzTheme="outline"></i></th>
+                <th>Room</th>
+                <th>Owner</th>
+                <th>Players</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr [ngClass]="{full: data.players == data.limit}" *ngFor="let data of Data"
+                [routerLink]="['/room', data._id]">
+                <td><i nz-icon [nzType]="data.locked ? 'lock' : 'unlock'" nzTheme="outline"></i></td>
+                <td>{{data.name}}</td>
+                <td>{{data.owner}}</td>
+                <td>{{data.players}}/{{data.limit}}</td>
+                <td><i *ngIf="data.players < data.limit" nz-icon nzType="right-circle" nzTheme="outline"></i>
+                  <b *ngIf="data.players == data.limit">FULL</b></td>
+              </tr>
+
+            </tbody>
+
+          </table>
+        </div>
+        <div class="rooms">
+          <p style="font-size: 26px; font-weight: bold">Public Rooms</p>
+          <div nz-row>
+            <div style="text-align: center; padding-top: 8px" nz-col nzSpan="2">
+              <a style="font-size: 26px" *ngIf="CanPrevious()" (click)="Previous()"><i nz-icon nzType="left"
+                  nzTheme="outline"></i></a>
+            </div>
+            <div [routerLink]="['/room', item._id]" *ngFor="let item of RoomPage" [@EnterLeave]="'flyIn'">
+              <div *ngIf="item" nz-col nzSpan="5">
+                <div class="room-comp" nz-row>
+                  <div nz-col nzSpan="10">
+                    <div class="room">
+                      <div
+                        style="overflow: hidden; border-radius: 30px; background: linear-gradient(#485669, #3F4857); height: 50px; width: 50px">
+                        <img style="width: 50px; height: 50px; opacity: .3" [src]="'/assets/' + item.name + '.jpg'" />
+                      </div>
+                    </div>
+                  </div>
+                  <div nz-col class="room-name" nzSpan="14">
+                    <h4>{{item.name}}</h4>
+                    <p>
+                      {{item.count}} players
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align: center; padding-top: 8px" nz-col nzSpan="2">
+              <a style="font-size: 26px" *ngIf="CanNext()" (click)="Next()"><i nz-icon nzType="right"
+                  nzTheme="outline"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+<nz-modal (nzOnCancel)="isVisible = false" [nzFooter]="null" [nzTitle]="null" [(nzVisible)]="isVisible"
+  [nzBodyStyle]="{padding: '0px'}">
+  <app-test [player]="userService.User"></app-test>
+</nz-modal>

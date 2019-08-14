@@ -1,0 +1,10 @@
+.song-container:hover {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+}
+
+.song-container:hover p { color: #50c9c3 !important; }
+
+.song-container {
+    padding: 5px 10px;
+}

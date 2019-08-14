@@ -1,0 +1,11 @@
+nz-header, nz-content, nz-footer {
+    background-color: #ffffff;
+    padding: 0 20px;
+}
+
+nz-footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:60px; 
+}

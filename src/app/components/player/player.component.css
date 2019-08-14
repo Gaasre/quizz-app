@@ -1,0 +1,11 @@
+.playing {
+    font-size: 30px;
+    margin-top: 10px;
+    color: #fff;
+    animation: 2s linear 0s infinite alternate opchange;
+}
+
+@keyframes opchange {
+    from {opacity: 1;}
+    to {opacity: 0.5;}
+  }

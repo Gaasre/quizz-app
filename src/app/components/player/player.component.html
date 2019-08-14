@@ -1,0 +1,8 @@
+<div style="text-align:center; height: 350px; background: linear-gradient(to right, #06beb6, #48b1bf); padding: 50px 0">
+  <div style="margin: 0 auto; width: 132px">
+    <nz-progress [nzStrokeWidth]="4" [nzStrokeColor]="'#fff'"
+      [nzPercent]="percent" nzType="circle" [nzFormat]="formatOne"></nz-progress>
+  </div>
+  <p *ngIf="!isWaiting" class="playing">Playing Song ...</p>
+  <p *ngIf="isWaiting" class="playing">Waiting ...</p>
+</div>

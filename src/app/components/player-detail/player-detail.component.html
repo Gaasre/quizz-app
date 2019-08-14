@@ -1,0 +1,18 @@
+<div style="cursor: pointer; padding: 0px 10px; border-radius: 10px" nz-row>
+  <div nz-col [nzSpan]="5">
+    <img *ngIf="playerRank === 2" style="height: 30px" src="/assets/bronze.png">
+    <img *ngIf="playerRank === 1" style="height: 30px" src="/assets/silver.png">
+    <img *ngIf="playerRank === 0" style="height: 30px" src="/assets/gold.png">
+    <p *ngIf="playerRank > 2" style="margin-left: 10px">{{playerRank + 1}}</p>
+  </div>
+  <div nz-col [nzSpan]="12">
+    <p style="margin-top: 5px">{{playerData.player_name}}</p>
+  </div>
+  <div style="text-align: center" nz-col [nzSpan]="2">
+    <a><i nz-icon nzType="stop" nzTheme="outline"></i></a>
+  </div>
+  <div nz-col style="text-align: center" [nzSpan]="5">
+    <nz-badge style="margin-top: 5px" [nzCount]="playerData.points" [nzShowZero]="true"></nz-badge>
+  </div>
+</div>
+<nz-divider style="margin: 6px 0"></nz-divider>
