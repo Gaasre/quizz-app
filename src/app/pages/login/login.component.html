@@ -1,9 +1,12 @@
-<div [ngStyle]="{'padding-top': isMobile ? '30%' : '5%'}" style="min-height: 100vh; width: 100vw; background: linear-gradient(to right, #8A86EC, #7b78c9);">
+<div [ngStyle]="{'padding-top': isMobile ? '30%' : '5%'}"
+  style="min-height: 100vh; width: 100vw; background: linear-gradient(#20232a, #2b2f39);;">
   <div nz-row [ngStyle]="{'width': isMobile ? '90%' : '60%'}"
-    style="margin:auto; box-shadow: 0px 15px 25px -16px rgba(0,0,0,0.75); background: #ffffff">
+    style="margin:auto; box-shadow: 0px 15px 25px -16px rgba(0,0,0,0.75); background: #2c3139">
     <div style="padding: 5%;" nz-col nzXs="24" nzLg="12">
-      <h2 nz-title style="margin-bottom: 20px">Welcome to <b>QUIZZTUNE</b></h2>
-      <p style="margin-bottom: 50px">Biggest musical quiz, compete against players all around the world.</p>
+      <h2 nz-title style="margin-bottom: 20px; font-size: 32px; font-weight: bold; color: #F7F8F8;">Welcome to
+        <b>QUIZZTUNE</b></h2>
+      <p style="margin-bottom: 50px; color: #a9a6bb;">Biggest musical quiz, compete against players all around the
+        world.</p>
       <nz-alert *ngIf="error" style="margin-bottom: 10px" nzType="error" [nzMessage]="error" nzShowIcon></nz-alert>
       <div style="margin: auto; width: 90%">
         <nz-input-group style="margin-bottom: 10px;" [nzPrefix]="prefixEmail">
@@ -24,7 +27,7 @@
           <i nz-icon [nzType]="'mail'"></i>
         </ng-template>
         <div style="width: 100%; margin-bottom: 20px">
-          <label nz-checkbox [(ngModel)]="remember">Remember me</label>
+          <label style="color: #F7F8F8;" nz-checkbox [(ngModel)]="remember">Remember me</label>
           <a style="float: right">Forgot password ?</a>
         </div>
         <div nz-row>
@@ -32,13 +35,15 @@
             <button (click)="Login()" nz-button style="height: 40px; width: 96%" nzType="primary">Login</button>
           </div>
           <div nz-col nzXs="24" nzLg="12">
-            <button [routerLink]="['/signup']" style="height: 40px; width: 96%" nz-button nzType="default">Create profile</button>
+            <button [routerLink]="['/signup']" style="height: 40px; width: 96%" nz-button nzType="default">Create
+              profile</button>
           </div>
         </div>
       </div>
     </div>
-    <div nz-col style="overflow: hidden;background: linear-gradient(to right, #8A86EC, #7b78c9);" nzLg="12">
-      <img *ngIf="!isMobile" style="height: 460px; position: relative; left: -100px; opacity: .5;" src="/assets/bg.png" alt="">
+    <div nz-col style="overflow: hidden;background: linear-gradient(#20232a, #2b2f39);" nzLg="12">
+      <img *ngIf="!isMobile" style="height: 460px; position: relative; left: -100px; opacity: .1;" src="/assets/bg.png"
+        alt="">
     </div>
   </div>
 </div>

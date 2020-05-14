@@ -2,30 +2,20 @@
   <nz-header>
     <div style="width: 100%; height: 100%; display: inline-flexbox">
       <div class="logo">
-        <img src="/assets/logo.png" alt="" width="32px" height="32px">
+      </div>
+      <div style="float: right; padding: 5px">
+        <img *ngIf="isMobile" (click)="isVisible = true"
+          style="width: 40px; height: 40px; border-radius: 30px; margin-bottom: 10px; cursor: pointer"
+          [src]="userService.tempAvatar ? userService.tempAvatar : userService.User?.avatar ? '/assets/avatars/' + userService.User?.avatar : '/assets/avatar.png'">
       </div>
     </div>
   </nz-header>
   <nz-layout>
-    <nz-sider style="padding: 10px 0px" [nzWidth]="70" class="left-menu">
+    <nz-sider style="padding: 10px 0px" [nzWidth]="70" class="left-menu" *ngIf="!isMobile">
       <div style="position: absolute; bottom: 0; border-top: 1px solid #837fde33; padding: 20px 12px;">
-        <img nzTrigger="click" nz-popover [nzTitle]="headerTemplate" [nzContent]="contentTemplate"
-          nzPlacement="rightBottom"
+        <img (click)="isVisible = true"
           style="width: 40px; height: 40px; border-radius: 30px; margin-bottom: 10px; cursor: pointer"
-          [src]=" userService.tempAvatar ? userService.tempAvatar : userService.User?.avatar ? '/assets/avatars/' + userService.User?.avatar : '/assets/avatar.png'"
-          alt="Avatar">
-        <ng-template #headerTemplate>
-          <b style="margin-bottom: 10px">{{userService.User.username}}</b>
-        </ng-template>
-        <ng-template #contentTemplate>
-          <div style="display: grid">
-            <a (click)="isVisible = true" style="margin-bottom: 5px"><i nz-icon nzType="user" nzTheme="outline"></i>
-              Profil</a>
-            <a (click)="Disconnect()"><i style="color:crimson" nz-icon nzType="poweroff" nzTheme="outline"></i>
-              Disconnect</a></div>
-        </ng-template>
-        <a><i style="font-size: 20px;border: 1px solid #A490BD33;border-radius: 9px;padding: 8px;" nz-icon
-            nzType="setting" nzTheme="outline"></i></a>
+          [src]=" userService.tempAvatar ? userService.tempAvatar : userService.User?.avatar ? '/assets/avatars/' + userService.User?.avatar : '/assets/avatar.png'">
       </div>
     </nz-sider>
     <nz-content style="overflow-y: auto">
@@ -79,17 +69,14 @@
                         </div>
                       </div>
                       <div nz-col class="room-name" nzSpan="14">
-                        <h4>{{item.name}}</h4>
+                        <h4>{{item.name | titlecase}}</h4>
                         <p>
-                          {{item.description}}
+                          {{item.description | titlecase}}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-
-
-
               </div>
             </div>
           </div>
@@ -144,35 +131,24 @@
         </div>
         <div class="rooms">
           <p style="font-size: 26px; font-weight: bold">Public Rooms</p>
-          <div nz-row>
-            <div style="text-align: center; padding-top: 8px" nz-col nzSpan="2">
-              <a style="font-size: 26px" *ngIf="CanPrevious()" (click)="Previous()"><i nz-icon nzType="left"
-                  nzTheme="outline"></i></a>
-            </div>
-            <div [routerLink]="['/room', item._id]" *ngFor="let item of RoomPage" [@EnterLeave]="'flyIn'">
-              <div *ngIf="item" nz-col nzSpan="5">
-                <div class="room-comp" nz-row>
-                  <div nz-col nzSpan="10">
-                    <div class="room">
-                      <div
-                        style="overflow: hidden; border-radius: 30px; background: linear-gradient(#485669, #3F4857); height: 50px; width: 50px">
-                        <img style="width: 50px; height: 50px; opacity: .3" [src]="'/assets/' + item.name + '.jpg'" />
-                      </div>
+          <div style="width: 100%; overflow-x: auto; display: flex; padding-bottom: 15px">
+            <div [routerLink]="['/room', item._id]" *ngFor="let item of Rooms" [@EnterLeave]="'flyIn'">
+              <div class="room-comp" nz-row>
+                <div nz-col nzSpan="10">
+                  <div class="room">
+                    <div
+                      style="overflow: hidden; border-radius: 30px; background: linear-gradient(#485669, #3F4857); height: 40px; width: 40px">
+                      <img style="width: 40px; height: 40px; opacity: .3" [src]="'/assets/' + item.name + '.jpg'" />
                     </div>
                   </div>
-                  <div nz-col class="room-name" nzSpan="14">
-                    <h4>{{item.name}}</h4>
-                    <p>
-                      {{item.count}} players
-                    </p>
-                  </div>
+                </div>
+                <div nz-col class="room-name" nzSpan="14">
+                  <h4>{{item.name}}</h4>
+                  <p>
+                    {{item.count}} players
+                  </p>
                 </div>
               </div>
-            </div>
-
-            <div style="text-align: center; padding-top: 8px" nz-col nzSpan="2">
-              <a style="font-size: 26px" *ngIf="CanNext()" (click)="Next()"><i nz-icon nzType="right"
-                  nzTheme="outline"></i></a>
             </div>
           </div>
         </div>
@@ -182,5 +158,42 @@
 </nz-layout>
 <nz-modal (nzOnCancel)="isVisible = false" [nzFooter]="null" [nzTitle]="null" [(nzVisible)]="isVisible"
   [nzBodyStyle]="{padding: '0px'}">
-  <app-test [player]="userService.User"></app-test>
+  <app-test></app-test>
+</nz-modal>
+
+<nz-modal (nzOnCancel)="Play()" [nzTitle]="null" [nzFooter]="null" [(nzVisible)]="!seen"
+  [nzBodyStyle]="{padding: '0px'}">
+  <div style="height: 400px; width: 350px">
+    <nz-carousel [nzEffect]="'scrollx'" [nzDotPosition]="'top'">
+      <div nz-carousel-content>
+        <div style="height: 50%; background: #2B3845; background-image: url(/assets/newroom.PNG)">
+        </div>
+        <div style="height: 50%; text-align: center; padding: 40px;">
+          Start by creating a new room
+        </div>
+      </div>
+      <div nz-carousel-content>
+        <div style="height: 50%; background: #2B3845; background-image: url(/assets/publicroom.PNG)">
+        </div>
+        <div style="height: 50%; text-align: center; padding: 40px;">
+          Or join a public room
+        </div>
+      </div>
+      <div nz-carousel-content>
+        <div style="height: 50%; background: #2B3845; background-image: url(/assets/publicroom.PNG)">
+        </div>
+        <div style="height: 50%; text-align: center; padding: 40px;">
+          <b>The Rules:</b>
+          <p>There are 20 songs per round, each song is played for 30 seconds. You have to guess the singer(s) and the title and each guess gets you a point for a total of 2 points per song.</p>
+        </div>
+      </div>
+      <div nz-carousel-content>
+        <div style="height: 50%; background: #2B3845; background-image: url(/assets/copy.PNG)">
+        </div>
+        <div style="height: 50%; text-align: center; padding: 40px;">
+          Invite your friends and <b>Have Fun</b> !
+        </div>
+      </div>
+    </nz-carousel>
+  </div>
 </nz-modal>

@@ -7,30 +7,16 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./test.component.css']
 })
 export class TestComponent implements OnInit {
-  @Input() player;
+  player;
   loading = false;
   constructor(public userService: UserService) { }
 
   ngOnInit() {
+    this.player = this.userService.User;
   }
 
-  onFileChange(event) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.loading = true;
-      this.userService.Avatar(file).subscribe((res: any) => {
-        if (res.id) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.player.avatar = '';
-            this.userService.User.avatar = '';
-            this.userService.tempAvatar = reader.result;
-          };
-          reader.readAsDataURL(file);
-          this.loading = false;
-        }
-      });
-    }
+  Disconnect() {
+    this.userService.Disconnect();
   }
 
 

@@ -1,0 +1,134 @@
+<nz-layout>
+  <nz-sider [nzWidth]="250" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0"
+    [nzZeroTrigger]="zeroTrigger">
+    <div class="sider-content">
+      <div class="logo">
+        <img src="/assets/logoRee.png" height="30px">
+      </div>
+      <div class="menu">
+        <h4>Rooms</h4>
+        <a [routerLink]="['/public']"><i nz-icon nzType="global" nzTheme="outline"></i> Public Rooms</a>
+        <a class="selected"><i nz-icon nzType="lock" nzTheme="outline"></i> Private Rooms</a>
+        <a (click)="open()"><i nz-icon nzType="plus" nzTheme="outline"></i> Create Room</a>
+      </div>
+      <div class="menu">
+          <h4>User</h4>
+          <a (click)="isVisible = true" [ngClass]="{selected: isVisible}"><i nz-icon nzType="user" nzTheme="outline"></i> Profil</a>
+        </div>
+    </div>
+  </nz-sider>
+  <nz-content>
+    <h4>Private Rooms</h4>
+    <div nz-row style="width: 100%; margin: 0 0 20px 0">
+      <div nz-col nzXs="24" nzLg="6">
+        <h2>All Rooms</h2>
+      </div>
+      <div nz-col nzXs="24" nzLg="6">
+        <label (ngModelChange)="FilterPrivate($event)" [ngModel]="private" style="color: #fff; margin-top: 15px"
+          nz-checkbox>Show
+          private lobbies
+          only</label>
+      </div>
+      <div nz-col nzXs="24" nzLg="12">
+        <nz-input-group style="width: 300px; margin-top: 10px" [nzPrefix]="IconSearch">
+          <input class="search" (input)="onSearchChange($event.target.value)" type="text" nz-input placeholder="Find a room ..." />
+        </nz-input-group>
+        <ng-template #IconSearch>
+          <i style="color: #fff" nz-icon nzType="search"></i>
+        </ng-template>
+      </div>
+    </div>
+    <div>
+      <table style="width:100%">
+        <thead>
+          <tr>
+            <th><i nz-icon nzType="lock" nzTheme="outline"></i></th>
+            <th>Room</th>
+            <th>Genre</th>
+            <th>Owner</th>
+            <th>Players</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr [ngClass]="{full: data.players == data.limit}" *ngFor="let data of Data"
+            [routerLink]="['/room', data._id]">
+            <td><i nz-icon [nzType]="data.locked ? 'lock' : 'unlock'" nzTheme="outline"></i></td>
+            <td>{{data.name}}</td>
+            <td>{{data.theme | titlecase}}</td>
+            <td>{{data.owner}}</td>
+            <td>{{data.players}}/{{data.limit}}</td>
+            <td><i *ngIf="data.players < data.limit" nz-icon nzType="right-circle" nzTheme="outline"></i>
+              <b *ngIf="data.players == data.limit">FULL</b></td>
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+  </nz-content>
+</nz-layout>
+<ng-template #zeroTrigger>
+  <div class="collapse">
+    <i nz-icon nzType="menu" nzTheme="outline"></i>
+  </div>
+</ng-template>
+
+<!--<nz-footer>
+            <div nz-row class="footer-container">
+              <div nz-col nzLg="8" ngXs="24">
+                  <img style="margin-right: 15px; margin-bottom: 3px" src="/assets/logoRee.png" height="30px">
+                  QuizzTune, Inc.
+              </div>
+              <div nz-col nzLg="8" ngXs="24"></div>
+              <div style="text-align: center" nz-col nzLg="8" ngXs="24">
+                <a>Facebook</a>
+                <a>Instagram</a>
+              </div>
+            </div>
+          </nz-footer>-->
+
+
+<nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }"
+  [nzMaskClosable]="false" [nzWidth]="360" [nzVisible]="visible" nzTitle="New Room" (nzOnClose)="close()">
+  <form [formGroup]="form" nz-form>
+    <nz-form-item>
+      <nz-form-label>Name</nz-form-label>
+      <nz-form-control>
+        <input nz-input type="text" placeholder="Enter a name for the room" formControlName="name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Size</nz-form-label>
+      <nz-form-control>
+        <nz-select style="width: 100%;" nzPlaceHolder="Choose the room's size" formControlName="size">
+          <nz-option [nzValue]="5" nzLabel="5"></nz-option>
+          <nz-option [nzValue]="10" nzLabel="10"></nz-option>
+          <nz-option [nzValue]="20" nzLabel="20"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Password (Optional)</nz-form-label>
+      <nz-form-control>
+        <input type="password" nz-input placeholder="Enter a password" formControlName="password" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label>Genre</nz-form-label>
+        <nz-form-control>
+          <nz-select style="width: 100%;" nzShowSearch nzPlaceHolder="Select a genre" formControlName="genre">
+              <nz-option *ngFor="let item of Genres" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
+            </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+  </form>
+  <div class="footer">
+    <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>Cancel</span></button>
+    <button type="button" [disabled]="form.invalid" (click)="submit()" class="ant-btn ant-btn-primary"><span>Submit</span></button>
+  </div>
+</nz-drawer>
+<nz-modal (nzOnCancel)="isVisible = false" [nzFooter]="null" [nzTitle]="null" [(nzVisible)]="isVisible"
+  [nzBodyStyle]="{padding: '0px'}">
+  <app-test></app-test>
+</nz-modal>

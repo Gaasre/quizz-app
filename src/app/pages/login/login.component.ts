@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() {
+    this.isMobile = window.innerWidth <= 800;
     window.onresize = () => this.isMobile = window.innerWidth <= 800;
   }
 
@@ -31,7 +32,7 @@ export class LoginComponent implements OnInit {
         this.error = res.error;
       } else {
         this.userService.User = res;
-        this.router.navigate(['/lobby']);
+        this.router.navigate(['/public']);
       }
     });
   }

@@ -48,19 +48,12 @@ export class LobbyComponent implements OnInit {
   Rooms = [];
   isMobile;
 
+  seen = true;
+
   Page = 0;
   RoomPage = [];
 
-  Themes = [
-    { name: 'country', selected: false, description: 'Country music' },
-    { name: 'hiphop', selected: false, description: 'Hip-Hop music' },
-    { name: 'international', selected: false, description: 'International music' },
-    { name: 'jazz', selected: false, description: 'Jazz music' },
-    { name: 'metal', selected: false, description: 'Metal music' },
-    { name: 'pop', selected: false, description: 'Pop music' },
-    { name: 'rap', selected: false, description: 'Rap music' },
-    { name: 'rock', selected: false, description: 'Rock music' }
-  ];
+  Themes = [];
 
   constructor(private socketService: SocketService, private router: Router, public userService: UserService,
     private message: NzMessageService, private titleService: Title) { }
@@ -85,6 +78,14 @@ export class LobbyComponent implements OnInit {
 
   isSelected() {
     return this.Themes.find(x => x.selected === true) ? true : false;
+  }
+
+  Play() {
+    this.userService.seenRules().toPromise().then((res: any) => {
+      if (res.success === true) {
+        this.seen = true;
+      }
+    });
   }
 
   newRoom() {
@@ -120,8 +121,17 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.titleService.setTitle('QuizzTune - Lobby');
+    this.isMobile = window.innerWidth <= 800;
     window.onresize = () => this.isMobile = window.innerWidth <= 800;
+    if (this.userService.User) {
+      this.seen = this.userService.User.seen;
+    } else {
+      this.userService.getUser().toPromise().then((res: any) => {
+        this.userService.User = res;
+        this.seen = this.userService.User.seen;
+      });
+    }
+    this.titleService.setTitle('QuizzTune - Lobby');
     this.socketService.Connect();
     this.getLobbies();
     this.sub = this.socketService
@@ -136,7 +146,9 @@ export class LobbyComponent implements OnInit {
           this.message.error('Lobby already exists');
         } else if (message.type === 'rooms') {
           this.Rooms = message.data;
-          this.RoomPage = Array(4).fill(0).map((x, i) => this.Rooms[i + 4 * this.Page]);
+          this.Themes = message.data.map((item) => {
+            return { id: item._id, name: item.name, selected: false, description: item.name + ' music' };
+          });
         }
       });
   }

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SocketService } from 'src/app/services/socket.service';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzNotificationService } from 'ng-zorro-antd';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Title } from '@angular/platform-browser';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-room',
@@ -63,14 +64,39 @@ export class RoomComponent implements OnInit {
   winners = [];
   password = '';
 
-  constructor(private socketService: SocketService, private message: NzMessageService, private route: ActivatedRoute,
-    public userService: UserService, private router: Router, private titleService: Title) { }
+  form;
 
-  Guess(e) {
-    if (e.code === 'Enter') {
-      this.socketService.sendMessage('song_submission', { guess: this.value });
-      this.value = '';
-    }
+  isMobile = false;
+  isCollapsed = false;
+  isCollapsedChat = true;
+  newMessage = false;
+
+  @ViewChild('chatDiv', {static: false}) private chatDiv: ElementRef;
+
+  constructor(private socketService: SocketService, private message: NzMessageService, private route: ActivatedRoute,
+    public userService: UserService, private router: Router, private titleService: Title, private formBuilder: FormBuilder,
+    private notification: NzNotificationService) {
+    this.form = this.formBuilder.group({
+      guess: ''
+    });
+  }
+
+  scrollToBottom() {
+    try {
+      this.chatDiv.nativeElement.scrollTop = this.chatDiv.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
+
+  copyInputMessage(inputElement) {
+    inputElement.select();
+    document.execCommand('copy');
+    inputElement.setSelectionRange(0, 0);
+    this.message.info('Copied');
+  }
+
+  Guess() {
+    this.socketService.sendMessage('song_submission', { guess: this.form.value.guess });
+    this.form.reset();
   }
 
   Kick(player) {
@@ -109,6 +135,10 @@ export class RoomComponent implements OnInit {
     this.message.create(type, content);
   }
 
+  changeCollapseChat(e) {
+    this.newMessage = false;
+  }
+
   ngOnDestroy() {
     this.socketService.Disconnect();
     this.audio.pause();
@@ -132,6 +162,7 @@ export class RoomComponent implements OnInit {
         content: new Array(message)
       }];
     }
+    this.scrollToBottom();
   }
 
   SendChatMessage(e) {
@@ -161,8 +192,9 @@ export class RoomComponent implements OnInit {
   }
 
   SendAuth() {
+    console.log(this.userService.User);
     this.socketService.sendMessage('lobby_auth', {
-      username: this.userService.User.username,
+      id: this.userService.User.id,
       password: this.password,
       room: this.room
     });
@@ -173,19 +205,23 @@ export class RoomComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isMobile = window.innerWidth <= 800;
+    window.onresize = () => this.isMobile = window.innerWidth <= 800;
     this.room = this.route.snapshot.params.room;
     this.socketService.Connect();
     this.isConnected = true;
     if (this.userService.User) {
-      this.socketService.sendMessage('new_player', { avatar: this.userService.User.avatar, id: this.userService.User.id,
-        username: this.userService.User.username,
-        room: this.room });
+      this.socketService.sendMessage('new_player', {
+        id: this.userService.User.id,
+        room: this.room
+      });
     } else {
       this.userService.getUser().toPromise().then((res: any) => {
         this.userService.User = res;
-        this.socketService.sendMessage('new_player', { avatar: this.userService.User.avatar, id: this.userService.User.id,
-          username: this.userService.User.username,
-          room: this.room });
+        this.socketService.sendMessage('new_player', {
+          id: this.userService.User.id,
+          room: this.room
+        });
       });
     }
     this.audio = new Audio();
@@ -273,6 +309,7 @@ export class RoomComponent implements OnInit {
           this.guessedArtistTxt = 'Artist';
           this.guessedNameTxt = 'Title';
           this.percent = 0;
+          this.players.forEach(x => x.position = -1);
           clearInterval(this.timer);
           this.audio.pause();
           this.audio.currentTime = 0;
@@ -283,39 +320,54 @@ export class RoomComponent implements OnInit {
             }
           }, 1000);
         } else if (message.type === 'players_list') {
+          console.log(this.userService.User);
           this.hasAccess = true;
           this.players = message.data;
-          console.log(message.data);
         } else if (message.type === 'new_player') {
           this.players = [...this.players, message.data];
-          console.log(this.players);
         } else if (message.type === 'player_point') {
-          this.players.find(x => x.player_name === message.data.player_name).points = message.data.points;
+          const player = this.players.find(x => x.username === message.data.username);
+          player.points = message.data.points;
+          player.position = message.data.position;
           this.players.sort((a, b) => b.points - a.points);
         } else if (message.type === 'rooms') {
           this.Rooms = message.data;
           this.RoomPage = Array(4).fill(0).map((x, i) => this.Rooms[i + 4 * this.Page]);
         } else if (message.type === 'chat_message') {
           this.AddToChat(message.data.from, message.data.content);
+          if (this.isCollapsed) {
+            this.newMessage = true;
+          }
         } else if (message.type === 'lobby_auth_req') {
           this.hasAccess = false;
         } else if (message.type === 'lobby_auth_refused') {
           this.message.create('error', 'Wrong password, you will be redirected to lobby');
-          this.router.navigate(['/lobby']);
+          this.router.navigate(['/public']);
         } else if (message.type === 'room_not_found') {
           this.message.create('error', 'The room you\'re trying to access is not found');
-          this.router.navigate(['/lobby']);
+          this.router.navigate(['/public']);
         } else if (message.type === 'room_full') {
           this.message.create('error', 'The room you\'re trying to access is full');
-          this.router.navigate(['/lobby']);
+          this.router.navigate(['/public']);
         } else if (message.type === 'room_info') {
           this.roomInfos = message.data;
           this.titleService.setTitle('QuizzTune - ' + this.roomInfos.name);
         } else if (message.type === 'kicked') {
           this.message.create('error', 'You have been kicked out of the room');
-          this.router.navigate(['/lobby']);
+          this.router.navigate(['/public']);
         } else if (message.type === 'player_kicked') {
           this.AddToChat('SYSTEM', `The player ${message.data} has been kicked out of the room.`);
+        } else if (message.type === 'xp_gain') {
+          this.userService.User.xp = message.data.xp;
+        } else if (message.type === 'level_up') {
+          this.userService.User.xp = message.data.xp;
+          this.userService.User.nextLevelXP = message.data.nextLevelXP;
+          this.userService.User.level = message.data.level;
+          this.notification.success(
+            'Level Up !',
+            'Congratulations you just reached level ' + message.data.level,
+            { nzDuration: 3000 }
+          );
         }
       });
   }

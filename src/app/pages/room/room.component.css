@@ -3,27 +3,72 @@ nz-layout {
   color: #fff;
 }
 
-.logo {
-  width: 70px;
+nz-sider {
+  background: linear-gradient(#20232a, #2b2f39);
+  border-right: 1px solid #2c3138;
+}
+
+.collapse {
+  width: 100%;
   height: 100%;
-  border-right: 1px solid #37414F;
-  float: left;
-  padding-left: 15px;
-  cursor: pointer;
+  background: #2b2f39;
+  transition: .5s linear;
+  z-index: 1;
 }
 
-.logo img:hover {
-  opacity: 1;
-  box-shadow: 7px 7px 20px -11px rgba(183,182,245,1);
+.collapse:hover {
+  background: #20232a; 
 }
 
-.logo img {
-  opacity: .8;
-  transition: all .4s linear;
+sider-content {
+  padding: 10px 20px;
+}
+
+nz-sider .logo {
+  width: fit-content;
+  margin: 20px auto 100px auto;
+}
+
+nz-sider .menu {
+  padding: 12px;
+}
+
+nz-sider .menu h4 {
+  font-size: 16px;
+  font-weight: normal;
+  color: #9a9ea7;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+nz-sider .menu a.selected, nz-sider .menu a.selected i {
+  color: #8A86EC;
+}
+
+nz-sider .menu a {
+  color: #727780;
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  transition: color .3s linear;
+  margin-bottom: 20px;
+}
+
+nz-sider .menu a i {
+  font-size: 18px;
+  color: #fff;
+  padding: 0 15px;
+  transition: color .3s linear;
+}
+
+nz-sider .menu a:hover,
+nz-sider .menu a:hover i {
+  color: #8A86EC;
 }
 
 .chat {
-  background: linear-gradient(#525A6E, #24303B);
+  background: linear-gradient(#20232a, #2b2f39);
+  border-left: 1px solid #373d47;
 }
 
 .left-menu {
@@ -31,7 +76,7 @@ nz-layout {
 }
 
 nz-content {
-  background: linear-gradient(#343945, #1C242D);
+  background: linear-gradient(#20232a, #2b2f39);
   overflow: hidden;
   padding-bottom: 20px;
 }
@@ -72,6 +117,7 @@ nz-footer {
 
 .room-comp {
   cursor: pointer;
+  width: 150px
 }
 
 .room-comp:hover {
@@ -146,13 +192,6 @@ nz-footer {
   padding: 0px 10%;
 }
 
-nz-sider img {
-  cursor: pointer;
-}
-
-nz-sider img:hover {
-  border: 1px solid #837fde33;
-}
 
 .icontainer {
   opacity: .3;
@@ -178,10 +217,6 @@ nz-sider img:hover {
   border-bottom: 1px solid #688097;
 }
 
-nz-footer {
-  z-index: 1;
-}
-
 .song {
   border-radius: 2px;
   height: 80px;
@@ -198,15 +233,6 @@ nz-divider {
 
 .song.combo {
   background: #9390FE;
-}
-
-nz-sider nz-avatar {
-  margin: 10px 0px;
-  background: #3f425480;
-}
-
-nz-sider {
-  overflow-y: auto;
 }
 
 .lds-ripple {

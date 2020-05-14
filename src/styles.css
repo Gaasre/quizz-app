@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .ant-progress-circle-trail {
@@ -16,6 +16,7 @@ body {
 /* width */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   
   /* Track */

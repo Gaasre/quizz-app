@@ -1,19 +1,17 @@
 <div class="layout">
   <div class="info-container">
-    <div (click)="uploadbtn.click()" class="picture">
-      <img  [src]="player?.avatar ? '/assets/avatars/' + player?.avatar : userService.tempAvatar ? userService.tempAvatar : '/assets/avatar.png'" alt="">
-      <i class="edit-button" nz-icon [nzType]="loading ? 'loading' : 'picture'" nzTheme="outline"></i>
-      <input (change)="onFileChange($event)" #uploadbtn style="display: none" type="file" accept="image/*" />
-    </div>
-    <div style="text-align: center; padding-top: 50px">
-      <p style="font-weight: bold; font-size: 14px; margin-bottom:0px">{{player?.username}}</p>
-      <p style="color: #8A86EC">Novice</p>
-      <img src="/assets/chevron.png" alt="">
+    <div style="text-align: center;">
+      <nz-progress [nzStrokeColor]="'#8A86EC'" [nzShowInfo]="false" [nzGapDegree]="60"
+        [nzGapPosition]="'bottom'" [nzPercent]="(userService.User?.xp / userService.User?.nextLevelXP) * 100" nzType="circle" [nzWidth]="80"></nz-progress>
+      <p style="font-weight: bold; font-size: 16px; margin-bottom:5px">{{player?.username}}</p>
+      <p style="color: #8A86EC; font-weight: bold; font-size: 18px">Level {{player?.level}}</p>
+      <p style="font-weight: bold">{{player?.xp}} / {{player?.nextLevelXP}} XP</p>
     </div>
 
     <div style="text-align: center; margin-top: 10px">
-      <p style="font-weight: bold; font-size: 16px;margin-bottom: 0px">Total Points</p>
-      <p>{{player?.points}}</p>
+        <button (click)="Disconnect()" style="margin-top: 20px" nz-button nzType="danger"><i nz-icon nzType="poweroff"
+          nzTheme="outline"></i> Disconnect</button>
     </div>
+
   </div>
 </div>

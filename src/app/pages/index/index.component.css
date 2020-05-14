@@ -1,0 +1,143 @@
+nz-layout {
+  min-height: 100vh;
+  color: #fff;
+  overflow-y: auto;
+  background: #20232a;
+}
+
+nz-header {
+  z-index: 1;
+  position: fixed;
+  opacity: .9;
+  height: 65px !important;
+  width: 100%;
+  padding: 0px 15%;
+  background: #20232a;
+  height: 100%;
+  border-bottom: 1px solid #373c47;
+}
+
+nz-content {
+  background: linear-gradient(#20232a, #2b2f39);
+  padding-top: 150px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+nz-content h4 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6em;
+  color: #a9a6bb;
+  margin-bottom: 22px;
+}
+
+nz-content h1 {
+  max-width: 700px;
+  font-size: 62px;
+  font-weight: 800;
+  line-height: 1.162;
+  margin: 0 0 32px 0;
+  color: #F7F8F8;
+}
+
+nz-content .first-container p {
+  max-width: 720px;
+  margin-bottom: 50px;
+  color: #a9a6bb;
+  font-size: 20px;
+  margin: 0 0 42px 0;
+  line-height: 1.57em;
+}
+
+.second-container {
+    padding: 0 32px;
+    max-width: 1024px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.second-container h3 {
+    font-size: 16px;
+    color: #8A86EC;
+}
+
+.second-container h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #F7F8F8;
+    margin: 0 0 10px 0;
+}
+
+.second-container p {
+    color: #dadfe7;
+    font-size: 20px;
+    line-height: 1.57em;
+}
+
+.image-container {
+  position: relative;
+  margin-top: 108px;
+  width: 115%;
+  max-width: 80vw;
+}
+
+.image-container img {
+  opacity: .6;
+  width: 100%;
+  height: auto;
+  box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.14);
+}
+
+.second-container .grid {
+    border-radius: 10px;
+    background: #2b2f39;
+}
+
+.second-container .grid div {
+    padding: 40px 32px;
+    min-height: 200px;
+}
+
+.grid h4 {
+    font-size: 19px;
+    font-weight: bold;
+    color: #8A86EC;
+    height: 40px;
+    margin: 0;
+}
+
+.grid h5 {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 4px 0;
+    color: #F7F8F8;
+}
+
+.grid p {
+    font-size: 15px;
+    margin-bottom: 0;
+    color: #dadfe7;
+}
+
+nz-footer {
+  background: #20232a;
+  padding: 0;
+  height: 100px;
+}
+
+nz-footer .footer-container {
+    padding: 40px 24px;
+    font-size: 14px;
+    color: #95A2B3;
+    max-width: 1024px;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+}
+
+nz-footer a {
+    margin-right: 30px;
+}

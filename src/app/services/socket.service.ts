@@ -12,7 +12,8 @@ export class SocketService {
   private socket;
 
   constructor(private globals: Globals) {
-    this.url = globals.SERVER_URL;
+    this.url = this.globals.SERVER_URL;
+    console.log(this.url);
   }
 
   public Connect() {
@@ -158,6 +159,18 @@ export class SocketService {
       this.socket.on('round_end', (message) => {
         observer.next({
           type: 'round_end',
+          data: message
+        });
+      });
+      this.socket.on('xp_gain', (message) => {
+        observer.next({
+          type: 'xp_gain',
+          data: message
+        });
+      });
+      this.socket.on('level_up', (message) => {
+        observer.next({
+          type: 'level_up',
           data: message
         });
       });

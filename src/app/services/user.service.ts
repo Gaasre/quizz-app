@@ -19,6 +19,7 @@ export class UserService {
     public Login(user) {
         return this.http.Post(user, 'user/login').pipe(map((res: any) => {
             this.storage.set('token', res.token);
+            this.tokenRequest.setAuthorization(res.token);
             return res;
         }));
     }
@@ -26,6 +27,7 @@ export class UserService {
     public Signup(user) {
         return this.http.Post(user, 'user/signup').pipe(map((res: any) => {
             this.storage.set('token', res.token);
+            this.tokenRequest.setAuthorization(res.token);
             return res;
         }));
     }
@@ -42,5 +44,13 @@ export class UserService {
 
     public Avatar(data) {
         return this.tokenRequest.upload(data);
+    }
+
+    public connected() {
+        return this.http.Get('connected');
+    }
+
+    public seenRules() {
+        return this.tokenRequest.get('user/seen');
     }
 }

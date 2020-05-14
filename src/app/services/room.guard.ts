@@ -14,7 +14,7 @@ export class RoomGuard implements CanActivate {
     canActivate() {
 
         if (!this.storage.get('token')) {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/']);
             return false;
         }
         return true;
