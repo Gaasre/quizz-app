@@ -14,4 +14,6 @@ A song guessing game.
 
 First you need to install all the dependencies `npm install`.
 
-Then Launch the development server `ng serve`. Don't forget to change the api adresse in `/services`
+Then Launch the development server `ng serve`.
+
+Don't forget to change the API address in `/services`
